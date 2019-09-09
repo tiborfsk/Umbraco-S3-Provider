@@ -2,7 +2,7 @@
 using System.IO;
 using System.Web.Hosting;
 
-namespace Umbraco.Storage.S3
+namespace Umbraco.Storage.S3.Media
 {
     internal class FileSystemVirtualPathProviderFile : VirtualFile
     {

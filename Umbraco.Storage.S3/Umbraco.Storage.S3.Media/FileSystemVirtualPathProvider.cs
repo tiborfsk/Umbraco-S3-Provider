@@ -3,7 +3,7 @@ using System.Web.Hosting;
 using Umbraco.Core.Composing;
 using Umbraco.Core.IO;
 
-namespace Umbraco.Storage.S3
+namespace Umbraco.Storage.S3.Media
 {
     public class FileSystemVirtualPathProvider : VirtualPathProvider
     {

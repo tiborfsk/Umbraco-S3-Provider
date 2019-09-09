@@ -6,7 +6,7 @@ using Umbraco.Core.Exceptions;
 using Umbraco.Core.Logging;
 using Umbraco.Storage.S3.Services;
 
-namespace Umbraco.Storage.S3
+namespace Umbraco.Storage.S3.Media
 {
     [RuntimeLevel(MinLevel = RuntimeLevel.Run)]
     public class BucketFileSystemComposer : IComposer

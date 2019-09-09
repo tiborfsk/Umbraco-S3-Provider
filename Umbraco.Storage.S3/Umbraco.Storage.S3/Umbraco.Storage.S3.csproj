@@ -55,8 +55,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BucketFileSystemComponent.cs" />
-    <Compile Include="BucketFileSystemComposer.cs" />
     <Compile Include="Extensions\BucketExtensions.cs" />
     <Compile Include="Extensions\AclExtensions.cs" />
     <Compile Include="BucketFileSystem.cs" />
@@ -66,8 +64,6 @@
     <Compile Include="BucketFileSystemConfig.cs" />
     <Compile Include="Services\MimeTypeResolver.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
-    <Compile Include="FileSystemVirtualPathProvider.cs" />
-    <Compile Include="FileSystemVirtualPathProviderFile.cs" />
     <Compile Include="Services\IMimeTypeResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\FileSystemCacheProvider.cs" />
