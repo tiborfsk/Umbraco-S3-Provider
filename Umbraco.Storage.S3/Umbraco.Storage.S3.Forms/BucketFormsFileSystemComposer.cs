@@ -14,7 +14,7 @@ namespace Umbraco.Storage.S3.Forms
 
     [ComposeAfter(typeof(UmbracoFormsComposer))]
     [RuntimeLevel(MinLevel = RuntimeLevel.Run)]
-    public class BucketFormsFileSystemComposer
+    public class BucketFormsFileSystemComposer : IComposer
     {
         private const string AppSettingsKey = "BucketFileSystem";
         private readonly char[] Delimiters = "/".ToCharArray();
@@ -45,7 +45,7 @@ namespace Umbraco.Storage.S3.Forms
         {
             var bucketName = ConfigurationManager.AppSettings[$"{AppSettingsKey}:BucketName"];
             var bucketHostName = ConfigurationManager.AppSettings[$"{AppSettingsKey}:BucketHostname"];
-            var bucketPrefix = ConfigurationManager.AppSettings[$"{AppSettingsKey}:FormsPrefix"].Trim(Delimiters);
+            var bucketPrefix = ConfigurationManager.AppSettings[$"{AppSettingsKey}:FormsPrefix"];
             var region = ConfigurationManager.AppSettings[$"{AppSettingsKey}:Region"];
             bool.TryParse(ConfigurationManager.AppSettings[$"{AppSettingsKey}:DisableVirtualPathProvider"], out var disableVirtualPathProvider);
 
@@ -65,7 +65,7 @@ namespace Umbraco.Storage.S3.Forms
             {
                 BucketName = bucketName,
                 BucketHostName = bucketHostName,
-                BucketPrefix = bucketPrefix,
+                BucketPrefix = bucketPrefix.Trim(Delimiters),
                 Region = region,
                 CannedACL = new S3CannedACL("public-read"),
                 ServerSideEncryptionMethod = "",
