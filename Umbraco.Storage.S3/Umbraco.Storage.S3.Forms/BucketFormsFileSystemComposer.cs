@@ -45,21 +45,21 @@ namespace Umbraco.Storage.S3.Forms
         {
             var bucketName = ConfigurationManager.AppSettings[$"{AppSettingsKey}:BucketName"];
             var bucketHostName = ConfigurationManager.AppSettings[$"{AppSettingsKey}:BucketHostname"];
-            var bucketPrefix = ConfigurationManager.AppSettings[$"{AppSettingsKey}:BucketPrefix"].Trim(Delimiters);
+            var bucketPrefix = ConfigurationManager.AppSettings[$"{AppSettingsKey}:FormsPrefix"].Trim(Delimiters);
             var region = ConfigurationManager.AppSettings[$"{AppSettingsKey}:Region"];
             bool.TryParse(ConfigurationManager.AppSettings[$"{AppSettingsKey}:DisableVirtualPathProvider"], out var disableVirtualPathProvider);
 
             if (string.IsNullOrEmpty(bucketName))
-                throw new ArgumentNullOrEmptyException("BucketName", $"The AWS S3 Bucket File System is missing the value '{AppSettingsKey}:BucketName' from AppSettings");
+                throw new ArgumentNullOrEmptyException("BucketName", $"The AWS S3 Bucket File System (Forms) is missing the value '{AppSettingsKey}:BucketName' from AppSettings");
 
             if (string.IsNullOrEmpty(bucketPrefix))
-                throw new ArgumentNullOrEmptyException("BucketPrefix", $"The AWS S3 Bucket File System is missing the value '{AppSettingsKey}:BucketPrefix' from AppSettings");
+                throw new ArgumentNullOrEmptyException("BucketPrefix", $"The AWS S3 Bucket File System (Forms) is missing the value '{AppSettingsKey}:FormsPrefix' from AppSettings");
 
             if (string.IsNullOrEmpty(region))
-                throw new ArgumentNullOrEmptyException("Region", $"The AWS S3 Bucket File System is missing the value '{AppSettingsKey}:Region' from AppSettings");
+                throw new ArgumentNullOrEmptyException("Region", $"The AWS S3 Bucket File System (Forms) is missing the value '{AppSettingsKey}:Region' from AppSettings");
 
             if (disableVirtualPathProvider && string.IsNullOrEmpty(bucketHostName))
-                throw new ArgumentNullOrEmptyException("BucketHostname", $"The AWS S3 Bucket File System is missing the value '{AppSettingsKey}:BucketHostname' from AppSettings");
+                throw new ArgumentNullOrEmptyException("BucketHostname", $"The AWS S3 Bucket File System (Forms) is missing the value '{AppSettingsKey}:BucketHostname' from AppSettings");
 
             return new BucketFileSystemConfig
             {
