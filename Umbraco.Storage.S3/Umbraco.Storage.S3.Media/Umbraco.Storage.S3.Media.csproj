@@ -45,10 +45,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BucketFileSystemComponent.cs" />
-    <Compile Include="BucketFileSystemComposer.cs" />
+    <Compile Include="BucketMediaFileSystemComponent.cs" />
+    <Compile Include="BucketMediaFileSystemComposer.cs" />
     <Compile Include="FileSystemVirtualPathProvider.cs" />
-    <Compile Include="FileSystemVirtualPathProviderFile.cs" />
+    <Compile Include="FileSystemVirtualFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">

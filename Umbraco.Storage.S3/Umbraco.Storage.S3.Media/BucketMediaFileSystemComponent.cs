@@ -3,12 +3,12 @@ using Umbraco.Core.IO;
 
 namespace Umbraco.Storage.S3.Media
 {
-    public class BucketFileSystemComponent : IComponent
+    public class BucketMediaFileSystemComponent : IComponent
     {
         private readonly SupportingFileSystems supportingFileSystems;
         private readonly BucketFileSystemConfig config;
 
-        public BucketFileSystemComponent(SupportingFileSystems supportingFileSystems, BucketFileSystemConfig config)
+        public BucketMediaFileSystemComponent(SupportingFileSystems supportingFileSystems, BucketFileSystemConfig config)
         {
             this.supportingFileSystems = supportingFileSystems;
             this.config = config;

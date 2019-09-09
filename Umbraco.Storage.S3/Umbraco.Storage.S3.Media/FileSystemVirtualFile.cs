@@ -4,11 +4,11 @@ using System.Web.Hosting;
 
 namespace Umbraco.Storage.S3.Media
 {
-    internal class FileSystemVirtualPathProviderFile : VirtualFile
+    internal class FileSystemVirtualFile : VirtualFile
     {
         private readonly Func<Stream> _stream;
 
-        public FileSystemVirtualPathProviderFile(string virtualPath, Func<Stream> stream) : base(virtualPath)
+        public FileSystemVirtualFile(string virtualPath, Func<Stream> stream) : base(virtualPath)
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");

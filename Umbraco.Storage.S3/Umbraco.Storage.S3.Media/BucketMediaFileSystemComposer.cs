@@ -9,7 +9,7 @@ using Umbraco.Storage.S3.Services;
 namespace Umbraco.Storage.S3.Media
 {
     [RuntimeLevel(MinLevel = RuntimeLevel.Run)]
-    public class BucketFileSystemComposer : IComposer
+    public class BucketMediaFileSystemComposer : IComposer
     {
         private const string AppSettingsKey = "BucketFileSystem";
         private readonly char[] Delimiters = "/".ToCharArray();
@@ -33,7 +33,7 @@ namespace Umbraco.Storage.S3.Media
                     new AmazonS3Client(Amazon.RegionEndpoint.GetBySystemName(config.Region))
                 ));
 
-                composition.Components().Append<BucketFileSystemComponent>();
+                composition.Components().Append<BucketMediaFileSystemComponent>();
 
             }
 

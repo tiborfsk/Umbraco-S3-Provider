@@ -186,10 +186,14 @@
     <Compile Include="BucketFileSystemRelativeTests.cs" />
     <Compile Include="EncryptionExtensionsTests.cs" />
     <Compile Include="FileSystemCacheProviderTests.cs" />
-    <Compile Include="FileSystemVirtualPathProviderTests.cs" />
+    <Compile Include="MediaFileSystemVirtualPathProviderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Umbraco.Storage.S3.Media\Umbraco.Storage.S3.Media.csproj">
+      <Project>{24c2128f-8652-45e2-a550-b7434c2cc906}</Project>
+      <Name>Umbraco.Storage.S3.Media</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Umbraco.Storage.S3\Umbraco.Storage.S3.csproj">
       <Project>{20952015-a7db-483f-b0e1-8440b5053849}</Project>
       <Name>Umbraco.Storage.S3</Name>
