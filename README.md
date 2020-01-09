@@ -1,16 +1,21 @@
 # Umbraco S3 Provider
 
-[Amazon Web Services S3](http://aws.amazon.com/s3/) IFileSystem provider for Umbraco 8. Used to offload media to the cloud! You don't have to be hosting your code in EC2 to get the benefits like handling large media libraries, freeing up disk space and removing static files from your deployment process.
+[Amazon Web Services S3](http://aws.amazon.com/s3/) IFileSystem provider for Umbraco 8. Used to offload media and/or forms to the cloud! You don't have to be hosting your code in EC2 to get the benefits like handling large media libraries, freeing up disk space and removing static files from your deployment process.
 
-Most of the code floating around the internet are slight modifications to code contained in this repository. If you're not 100% happy with it, submit a pull request or open dialog with the rest of the community. It's heavily unit tested against the official AWS S3 .Net API bindings.
+Many thanks must go to [Elijah Glover](https://github.com/ElijahGlover/) for initially creating this project for Umbraco 7. The upgrade to support Umbraco 8 and Umbraco Forms only builds on his earlier work.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/1p6qllpo5ep42ys9?svg=true)](https://ci.appveyor.com/project/ElijahGlover/umbraco-s3-provider)
+If you encounter any problems feel free to raise an issue, or maybe even a pull request if you're feeling generous!
+
 
 ## Installation & Configuration
 
-Install via NuGet.org - Packaged upon every comment thanks to the guys at [AppVeyor](http://www.appveyor.com/)
+Install via NuGet.org
 ```powershell
-Install-Package Umbraco.Storage.S3
+Install-Package Our.Umbraco.FileSystemProviders.S3.Media
+```
+or
+```powershell
+Install-Package Our.Umbraco.FileSystemProviders.S3.Forms
 ```
 
 Add the following keys to `~/Web.config`
@@ -113,3 +118,8 @@ Replace config file located `~/config/imageprocessor/security.config`
   </services>
 </security>
 ```
+
+## Future work on this project
+Due to not having access to the original Umbraco.Storage.S3 package name I've released the NuGet package under `Our.Umbraco.FileSystemProviders.S3...`. Add in the Web.config keys and we have 3 different naming conventions. I intend to resolve this at some point in the future. If the Web.config keys are changed then I will ensure the new names are optional and the old keys will continue to work.
+
+I also plan to setup an automated build process for this repository, so it can automatically be published to NuGet.
