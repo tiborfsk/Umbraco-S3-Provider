@@ -18,6 +18,7 @@ namespace Umbraco.Storage.S3
         protected readonly IFileCacheProvider FileCacheProvider;
         protected readonly IMimeTypeResolver MimeTypeResolver;
         protected readonly IAmazonS3 S3Client;
+        protected readonly string VirtualPath;
 
         protected const string Delimiter = "/";
         protected const int BatchSize = 1000;
@@ -27,13 +28,15 @@ namespace Umbraco.Storage.S3
             IMimeTypeResolver mimeTypeResolver,
             IFileCacheProvider fileCacheProvider,
             ILogger logger,
-            IAmazonS3 s3Client)
+            IAmazonS3 s3Client,
+            string virtualPath)
         {
             Config = config;
             FileCacheProvider = fileCacheProvider;
             MimeTypeResolver = mimeTypeResolver;
             Logger = logger;
             S3Client = s3Client;
+            VirtualPath = virtualPath;
         }
 
         public bool CanAddPhysical => false;
@@ -70,10 +73,10 @@ namespace Umbraco.Storage.S3
             }
         }
 
-        protected virtual string ResolveBucketPath(string path, bool isDir = false)
+        protected virtual string ResolveBucketPath(string path, bool isDir = false, bool useVirtualPath = false)
         {
             if (string.IsNullOrEmpty(path))
-                return Config.BucketPrefix;
+                return useVirtualPath ? VirtualPath : Config.BucketPrefix;
 
             //Remove Bucket Hostname
             if (!path.Equals("/") && path.StartsWith(Config.BucketHostName, StringComparison.InvariantCultureIgnoreCase))
@@ -88,6 +91,11 @@ namespace Umbraco.Storage.S3
             //Remove Key Prefix If Duplicate
             if (path.StartsWith(Config.BucketPrefix, StringComparison.InvariantCultureIgnoreCase))
                 path = path.Substring(Config.BucketPrefix.Length);
+            else if (
+                Config.VirtualPathProviderMode == VirtualPathProviderMode.Manual && 
+                path.StartsWith(VirtualPath, StringComparison.InvariantCultureIgnoreCase)
+            )
+                path = path.Substring(VirtualPath.Length);
 
             if (isDir && !path.EndsWith(Delimiter))
                 path = string.Concat(path, Delimiter);
@@ -95,7 +103,7 @@ namespace Umbraco.Storage.S3
             if (path.StartsWith(Delimiter))
                 path = path.Substring(1);
 
-            return string.Concat(Config.BucketPrefix, "/", path);
+            return string.Concat(useVirtualPath ? VirtualPath : Config.BucketPrefix, "/", path);
         }
 
         protected virtual string RemovePrefix(string key)
@@ -322,10 +330,16 @@ namespace Umbraco.Storage.S3
                 fullPathOrUrl = fullPathOrUrl.TrimStart(Delimiter.ToCharArray());
             }
 
-            //Strip Bucket Prefix
+            //Strip Bucket Prefix or virtual path
             if (fullPathOrUrl.StartsWith(Config.BucketPrefix, StringComparison.InvariantCultureIgnoreCase))
             {
                 fullPathOrUrl = fullPathOrUrl.Substring(Config.BucketPrefix.Length);
+                fullPathOrUrl = fullPathOrUrl.TrimStart(Delimiter.ToCharArray());
+            }
+            else if (Config.VirtualPathProviderMode == VirtualPathProviderMode.Manual &&
+                fullPathOrUrl.StartsWith(VirtualPath, StringComparison.InvariantCultureIgnoreCase))
+            {
+                fullPathOrUrl = fullPathOrUrl.Substring(VirtualPath.Length);
                 fullPathOrUrl = fullPathOrUrl.TrimStart(Delimiter.ToCharArray());
             }
 
@@ -341,7 +355,7 @@ namespace Umbraco.Storage.S3
         {
             var hostName = Config.BucketHostName;
 
-            if (Config.DisableVirtualPathProvider)
+            if (Config.VirtualPathProviderMode == VirtualPathProviderMode.Disabled)
             {
                 if (!hostName.StartsWith("http://") && !hostName.StartsWith("https://"))
                     hostName = "https://" + hostName;
@@ -351,7 +365,7 @@ namespace Umbraco.Storage.S3
                 hostName = "";
             }
 
-            return string.Concat(hostName, "/", ResolveBucketPath(path));
+            return string.Concat(hostName, "/", ResolveBucketPath(path, useVirtualPath: Config.VirtualPathProviderMode == VirtualPathProviderMode.Manual));
         }
 
         public virtual DateTimeOffset GetLastModified(string path)

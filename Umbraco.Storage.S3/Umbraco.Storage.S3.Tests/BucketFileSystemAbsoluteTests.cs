@@ -29,7 +29,7 @@ namespace Umbraco.Storage.S3.Tests
             string region,
             string cannedACL = null,
             string serverSideEncryptionMethod = null,
-            bool disableVirtualPathProvider = true)
+            VirtualPathProviderMode virtualPathProviderMode = VirtualPathProviderMode.Disabled)
         {
             var logHelperMock = new Mock<ILogger>();
             var mimeTypeResolver = new Mock<IMimeTypeResolver>();
@@ -41,9 +41,9 @@ namespace Umbraco.Storage.S3.Tests
                 Region = region,
                 CannedACL = cannedACL,
                 ServerSideEncryptionMethod = serverSideEncryptionMethod,
-                DisableVirtualPathProvider = disableVirtualPathProvider
+                VirtualPathProviderMode = virtualPathProviderMode
             };
-            return new BucketFileSystem(config, mimeTypeResolver.Object, null, logHelperMock.Object, mock?.Object);
+            return new BucketFileSystem(config, mimeTypeResolver.Object, null, logHelperMock.Object, mock?.Object, bucketKeyPrefix);
         }
 
         [Test]

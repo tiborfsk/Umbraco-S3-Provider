@@ -19,9 +19,9 @@ namespace Umbraco.Storage.S3.Tests
                 BucketHostName = string.Empty,
                 BucketPrefix = "media",
                 Region = string.Empty,
-                DisableVirtualPathProvider = false
+                VirtualPathProviderMode = VirtualPathProviderMode.Enabled
             };
-            return new BucketFileSystem(config, mimeTypeResolverMock.Object, null, loggerMock.Object, mock?.Object);
+            return new BucketFileSystem(config, mimeTypeResolverMock.Object, null, loggerMock.Object, mock?.Object, "media");
         }
 
         [Test]
