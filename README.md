@@ -28,7 +28,7 @@ Add the following keys to `~/Web.config`
     <add key="BucketFileSystem:MediaPrefix" value="media" />
     <add key="BucketFileSystem:FormsPrefix" value="forms" />
     <add key="BucketFileSystem:BucketHostname" value="" />
-    <add key="BucketFileSystem:DisableVirtualPathProvider" value="false" />
+    <add key="BucketFileSystem:VirtualPathProviderMode" value="Enabled" />
   </appSettings>
 </configuration>
 ```
@@ -40,9 +40,9 @@ Add the following keys to `~/Web.config`
 | `FormsPrefix` | Sometimes | N/A | The prefix for any Umbraco Forms data files being added to S3. Essentially a root directory name. Required when using `Umbraco.Storage.S3.Forms` |
 | `BucketName` | Yes | N/A | The name of your S3 bucket. |
 | `BucketHostname` | Sometimes | N/A | The hostname for your bucket (e.g. `test-s3-bucket.s3.eu-west-2.amazonaws.com`). Required when `DisableVirtualPathProvider` is set to `true` |
-| `DisableVirtualPathProvider` | No | `false` | Setting this to `true` will disable the VPP functionality. See below for more info. |
+| `VirtualPathProviderMode` | No | `Enabled` | Setting this to `Disabled` or `Manual` will disable the VPP functionality. See below for more info. |
 
-If `DisableVirtualPathProvider` is set to `false` or left empty, then you'll need to add the following to `~/Web.config`
+If `VirtualPathProviderMode` is set to `Enabled` or left empty, then you'll need to add the following to `~/Web.config`
 ```xml
 <?xml version="1.0"?>
 <configuration>
@@ -70,6 +70,30 @@ You also need to add the following to `~/Media/Web.config`
 </configuration>
 ```
 
+If `VirtualPathProviderMode` is set to `Manual`, then you can manually rewrite media requests in `~/Media/Web.config`:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  ...
+  <system.webServer>
+    ...
+    <rewrite>
+        <rules>
+            <rule name="Media files rewrite" stopProcessing="true">
+                <match url="(.*)"/>
+                <conditions logicalGrouping="MatchAll">
+                    <add input="{REQUEST_URI}" pattern="^/media/(.*)$"/>
+                </conditions>
+                <action type="Rewrite" url="http://{Your Bucket Hostname}/{Your Key Prefix}/{C:1}"/>
+            </rule>
+        </rules>
+    </rewrite>
+    ...
+  </system.webServer>
+  ...
+</configuration>
+```
+
 
 ## AWS Authentication
 
@@ -91,7 +115,7 @@ If you aren't using EC2/ElasticBeanstalk to access generated temporary keys, you
 ## Should I use the Virtual Path Provider?
 Using a custom [Virtual Path Provider](https://msdn.microsoft.com/en-us/library/system.web.hosting.virtualpathprovider%28v=vs.110%29.aspx) (the default configuration) means your files are routed transparently through your domain (e.g. `https://example.com/media`). Anyone visiting your site won't be able to tell your files are stored on S3.
 
-Turning the VPP functionality off will store the full S3 URL for each media item, and this will be visible to anyone visiting your site.
+Disabling the VPP functionality will store the full S3 URL for each media item, and this will be visible to anyone visiting your site. To prevent this you can use `Manual` mode but then you need to manually implement/emulate missing VPP functionality (e.g. by using rewrites).
 
 Before making a decision either way you might want to read how Virtual Path Providers affect performance/caching, as it differs from IIS's [unmanaged handler](http://www.paraesthesia.com/archive/2011/05/02/when-staticfilehandler-is-not-staticfilehandler.aspx/).
 
@@ -119,7 +143,7 @@ Replace config file located `~/config/imageprocessor/security.config`
 </security>
 ```
 
-## Future work on this project
+## Future work on this project (in forked repository)
 Due to not having access to the original Umbraco.Storage.S3 package name I've released the NuGet package under `Our.Umbraco.FileSystemProviders.S3...`. Add in the Web.config keys and we have 3 different naming conventions. I intend to resolve this at some point in the future. If the Web.config keys are changed then I will ensure the new names are optional and the old keys will continue to work.
 
 I also plan to setup an automated build process for this repository, so it can automatically be published to NuGet.
