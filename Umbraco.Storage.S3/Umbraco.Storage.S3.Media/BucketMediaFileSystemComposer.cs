@@ -18,7 +18,7 @@ namespace Umbraco.Storage.S3.Media
         {
 
             var bucketName = ConfigurationManager.AppSettings[$"{AppSettingsKey}:BucketName"];
-            if (bucketName != null)
+            if (!string.IsNullOrWhiteSpace(bucketName))
             {
                 var config = CreateConfiguration();
 
