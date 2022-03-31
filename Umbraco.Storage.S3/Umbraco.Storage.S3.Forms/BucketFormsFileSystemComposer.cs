@@ -21,9 +21,8 @@ namespace Umbraco.Storage.S3.Forms
 
         public void Compose(Composition composition)
         {
-
-            var bucketName = ConfigurationManager.AppSettings[$"{AppSettingsKey}:BucketName"];
-            if (!string.IsNullOrWhiteSpace(bucketName))
+            bool.TryParse(ConfigurationManager.AppSettings[$"{AppSettingsKey}:UseS3FileStorage"], out var useS3FileStorage);
+            if (useS3FileStorage)
             {
                 var config = CreateConfiguration();
 

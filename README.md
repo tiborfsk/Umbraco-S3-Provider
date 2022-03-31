@@ -1,5 +1,7 @@
 # Umbraco S3 Provider
 
+Forked from [github](https://github.com/DannerrQ/Umbraco-S3-Provider)
+
 [Amazon Web Services S3](http://aws.amazon.com/s3/) IFileSystem provider for Umbraco 8. Used to offload media and/or forms to the cloud! You don't have to be hosting your code in EC2 to get the benefits like handling large media libraries, freeing up disk space and removing static files from your deployment process.
 
 Many thanks must go to [Elijah Glover](https://github.com/ElijahGlover/) for initially creating this project for Umbraco 7. The upgrade to support Umbraco 8 and Umbraco Forms only builds on his earlier work.
@@ -11,11 +13,11 @@ If you encounter any problems feel free to raise an issue, or maybe even a pull 
 
 Install via NuGet.org
 ```powershell
-Install-Package Our.Umbraco.FileSystemProviders.S3.Media
+Install-Package Briq.Umbraco.FileSystemProviders.S3.Media
 ```
 or
 ```powershell
-Install-Package Our.Umbraco.FileSystemProviders.S3.Forms
+Install-Package Briq.Umbraco.FileSystemProviders.S3.Forms
 ```
 
 Add the following keys to `~/Web.config`
