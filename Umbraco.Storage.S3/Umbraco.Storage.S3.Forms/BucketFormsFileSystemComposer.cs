@@ -21,9 +21,8 @@ namespace Umbraco.Storage.S3.Forms
 
         public void Compose(Composition composition)
         {
-
-            var bucketName = ConfigurationManager.AppSettings[$"{AppSettingsKey}:BucketName"];
-            if (bucketName != null)
+            bool.TryParse(ConfigurationManager.AppSettings[$"{AppSettingsKey}:UseS3FileStorage"], out var useS3FileStorage);
+            if (useS3FileStorage)
             {
                 var config = CreateConfiguration();
 
@@ -35,7 +34,8 @@ namespace Umbraco.Storage.S3.Forms
                     mimeTypeResolver: f.GetInstance<IMimeTypeResolver>(),
                     fileCacheProvider: null,
                     logger: f.GetInstance<ILogger>(),
-                    s3Client: new AmazonS3Client(Amazon.RegionEndpoint.GetBySystemName(config.Region))
+                    s3Client: new AmazonS3Client(Amazon.RegionEndpoint.GetBySystemName(config.Region)),
+                    virtualPath: "forms"
                 ));
             }
 
@@ -47,7 +47,7 @@ namespace Umbraco.Storage.S3.Forms
             var bucketHostName = ConfigurationManager.AppSettings[$"{AppSettingsKey}:BucketHostname"];
             var bucketPrefix = ConfigurationManager.AppSettings[$"{AppSettingsKey}:FormsPrefix"];
             var region = ConfigurationManager.AppSettings[$"{AppSettingsKey}:Region"];
-            bool.TryParse(ConfigurationManager.AppSettings[$"{AppSettingsKey}:DisableVirtualPathProvider"], out var disableVirtualPathProvider);
+            Enum<VirtualPathProviderMode>.TryParse(ConfigurationManager.AppSettings[$"{AppSettingsKey}:VirtualPathProviderMode"], out var virtualPathProviderMode);
 
             if (string.IsNullOrEmpty(bucketName))
                 throw new ArgumentNullOrEmptyException("BucketName", $"The AWS S3 Bucket File System (Forms) is missing the value '{AppSettingsKey}:BucketName' from AppSettings");
@@ -58,7 +58,7 @@ namespace Umbraco.Storage.S3.Forms
             if (string.IsNullOrEmpty(region))
                 throw new ArgumentNullOrEmptyException("Region", $"The AWS S3 Bucket File System (Forms) is missing the value '{AppSettingsKey}:Region' from AppSettings");
 
-            if (disableVirtualPathProvider && string.IsNullOrEmpty(bucketHostName))
+            if (virtualPathProviderMode != VirtualPathProviderMode.Enabled && string.IsNullOrEmpty(bucketHostName))
                 throw new ArgumentNullOrEmptyException("BucketHostname", $"The AWS S3 Bucket File System (Forms) is missing the value '{AppSettingsKey}:BucketHostname' from AppSettings");
 
             return new BucketFileSystemConfig
@@ -69,7 +69,7 @@ namespace Umbraco.Storage.S3.Forms
                 Region = region,
                 CannedACL = new S3CannedACL("public-read"),
                 ServerSideEncryptionMethod = "",
-                DisableVirtualPathProvider = disableVirtualPathProvider
+                VirtualPathProviderMode = virtualPathProviderMode
             };
         }
     }

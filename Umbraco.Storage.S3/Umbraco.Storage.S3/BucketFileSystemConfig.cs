@@ -2,6 +2,13 @@
 
 namespace Umbraco.Storage.S3
 {
+    public enum VirtualPathProviderMode
+    {
+        Enabled,
+        Disabled,
+        Manual
+    }
+
     public class BucketFileSystemConfig
     {
         public string BucketName { get; set; }
@@ -16,6 +23,6 @@ namespace Umbraco.Storage.S3
 
         public ServerSideEncryptionMethod ServerSideEncryptionMethod { get; set; }
 
-        public bool DisableVirtualPathProvider { get; set; }
+        public VirtualPathProviderMode VirtualPathProviderMode { get; set; }
     }
 }
